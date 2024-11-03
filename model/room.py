@@ -27,7 +27,6 @@ class RoomTable(DB_Base):
 
     @classmethod
     def create(cls, data: dict) -> RoomTable:
-        print("RoomTable.create", data)
         return cls(**data)
 
     def __repr__(self):

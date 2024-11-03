@@ -1,5 +1,7 @@
 from time import sleep
+
 from ai.llm.models.interface.base_ai_model import BaseAiModel
+from log import logger
 
 
 class MockModel(BaseAiModel):
@@ -7,7 +9,7 @@ class MockModel(BaseAiModel):
         self.max_length = max_length
         self.delay = delay
         sleep(init_delay)
-        print(f"Load {model_name} model complete.")
+        logger.info(f"Load {model_name} model complete.")
 
     def generate_response(self, prompt, messages=[]):
         sleep(self.delay)

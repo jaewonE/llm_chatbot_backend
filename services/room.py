@@ -15,7 +15,6 @@ class RoomService:
     def create_room(self, db: Session, create_room_input: CreateRoomInput, user_id: str) -> Room:
         create_room_input_data = create_room_input.model_dump()
         create_room_input_data["user_id"] = user_id
-        print("create_room_input_data", create_room_input_data)
         room_table = RoomTable.create(create_room_input_data)
         db.add(room_table)
         db.commit()

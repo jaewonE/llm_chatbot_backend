@@ -1,8 +1,10 @@
 import threading
 from queue import Queue
 from time import sleep, time
-from ai.llm.models import MockModel
 from typing import List, Dict, Any
+
+from ai.llm.models import MockModel
+from log import logger
 
 
 class ModelScheduler():
@@ -59,7 +61,7 @@ class ModelScheduler():
                         to_remove.append(model_name)
 
                 for model_name in to_remove:
-                    print(f"Removing idle model: {model_name}")
+                    logger.info(f"Removing idle model: {model_name}")
                     del self.models[model_name]
                     del self.request_queues[model_name]
                     del self.last_request_time[model_name]
@@ -83,7 +85,8 @@ if __name__ == "__main__":
     # Generate responses
     def async_generate(scheduler, model_name, prompt):
         response = scheduler.generate(model_name, prompt)
-        print(response)
+        logger.info(
+            f"Response from {model_name}: {response if response else 'No response'}")
 
     # Create threads to simulate asynchronous requests
     threading.Thread(target=async_generate, args=(
