@@ -1,5 +1,5 @@
 from __future__ import annotations
-from sqlalchemy import Column, String, ForeignKey, DateTime, Text
+from sqlalchemy import Column, String, ForeignKey, DateTime, Text, Integer
 from sqlalchemy.orm import relationship
 from db_base import DB_Base
 from datetime import datetime
@@ -8,7 +8,8 @@ from datetime import datetime
 class ChatTable(DB_Base):
     __tablename__ = 'chat'
 
-    id = Column(String, primary_key=True, unique=True, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True,
+                nullable=False, autoincrement=True)
     room_id = Column(String, ForeignKey('room.id'), nullable=False)
     ask = Column(Text, nullable=False)
     answer = Column(Text, nullable=False)

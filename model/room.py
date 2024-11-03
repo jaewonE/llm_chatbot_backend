@@ -1,5 +1,5 @@
 from __future__ import annotations
-from sqlalchemy import Column, String, ForeignKey, DateTime
+from sqlalchemy import Column, String, ForeignKey, DateTime, Integer
 from sqlalchemy.orm import relationship
 from db_base import DB_Base
 from datetime import datetime
@@ -8,7 +8,8 @@ from datetime import datetime
 class RoomTable(DB_Base):
     __tablename__ = 'room'
 
-    id = Column(String, primary_key=True, unique=True, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True,
+                nullable=False, autoincrement=True)
     user_id = Column(String, ForeignKey('user.id'), nullable=False)
     created_at = Column(
         DateTime, default=datetime.now, nullable=False)
@@ -26,6 +27,7 @@ class RoomTable(DB_Base):
 
     @classmethod
     def create(cls, data: dict) -> RoomTable:
+        print("RoomTable.create", data)
         return cls(**data)
 
     def __repr__(self):

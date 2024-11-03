@@ -11,7 +11,7 @@ class MockModel(BaseAiModel):
 
     def generate_response(self, prompt, messages=[]):
         sleep(self.delay)
-        return prompt
+        return f"Mock response to {prompt}"
 
     def set_max_length(self, max_length):
         self.max_length = max_length

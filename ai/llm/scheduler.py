@@ -1,7 +1,7 @@
 import threading
 from queue import Queue
 from time import sleep, time
-from models.mock import MockModel
+from ai.llm.models import MockModel
 from typing import List, Dict, Any
 
 

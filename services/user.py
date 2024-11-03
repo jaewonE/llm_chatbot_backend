@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import Optional
 from fastapi import UploadFile
 import os
@@ -33,15 +33,22 @@ class UserService:
     def create_user(self, db: Session, create_user_input: CreateUserInput) -> User:
         self._validate_unique_user(db, create_user_input.email)
 
-        create_user_input_data = create_user_input.dict(
-            exclude={"access_code"})
         create_user_input.password = AuthBcrypt.hash_password(
             create_user_input.password)
 
-        user_table = UserTable(**create_user_input_data)
+        user_table = UserTable(
+            **create_user_input.model_dump(exclude={"access_code"}))
         db.add(user_table)
         db.commit()
         db.refresh(user_table)
+
+        return user_table_to_schema(user_table)
+
+    def get_user_by_id(self, db: Session, user_id: str) -> User:
+        user_table = db.query(UserTable).options(joinedload(UserTable.rooms)).filter(
+            UserTable.id == user_id).first()
+        if not user_table:
+            raise UserNotFoundError(f"User with id {user_id} not found")
 
         return user_table_to_schema(user_table)
 
@@ -50,17 +57,15 @@ class UserService:
         if not user_table:
             raise UserNotFoundError(f"User with id {user_id} not found")
 
-        update_user_input_data = update_user_input.model_dump(
-            exclude_unset=True)
+        if update_user_input.email:
+            self._validate_unique_user(db, update_user_input.email)
 
-        if update_user_input_data.email:
-            self._validate_unique_user(db, update_user_input_data.email)
+        if update_user_input.password:
+            update_user_input.password = AuthBcrypt.hash_password(
+                update_user_input.password)
 
-        if update_user_input_data.password:
-            update_user_input_data.password = AuthBcrypt.hash_password(
-                update_user_input_data.password)
-
-        user_table = self._update_user(db, user_table, update_user_input_data)
+        user_table = self._update_user(
+            db, user_table, update_user_input.model_dump(exclude_unset=True))
 
         return user_table_to_schema(user_table)
 

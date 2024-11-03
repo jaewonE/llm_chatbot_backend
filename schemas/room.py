@@ -8,7 +8,7 @@ from schemas.common import BaseOutput
 
 
 class Room(BaseModel):
-    id: str
+    id: int
     user_id: str
     created_at: datetime
     name: Optional[str] = None
@@ -40,9 +40,14 @@ class UpdateRoomInput(BaseModel):
 
 
 class UpdateRoomOutput(BaseOutput):
-    id: str
+    id: int
     room: Optional[Room] = None
 
 
 class DeleteRoomOutput(BaseOutput):
     pass  # No additional fields needed
+
+
+# chat service schemas
+class GetRoomChatsOutput(BaseOutput):
+    room: Optional[Room] = None

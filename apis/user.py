@@ -23,7 +23,7 @@ def create_user_endpoint(
         db: Session = Depends(get_db_session)) -> CreateUserOutput:
     check_access_code(create_user_input.access_code)
     user = user_service.create_user(db, create_user_input)
-    jwt_token = signJWT(user.uid)
+    jwt_token = signJWT(user.id)
     return CreateUserOutput(user=user, token=jwt_token, success=True, message="User created successfully")
 
 
@@ -70,5 +70,5 @@ def login(
         login_user_input: LoginUserInput,
         db: Session = Depends(get_db_session)) -> LoginUserOutput:
     user = user_service.login(db, login_user_input)
-    jwt_token = signJWT(user.uid)
+    jwt_token = signJWT(user.id)
     return LoginUserOutput(user=user, token=jwt_token, success=True, message="User logged in successfully")

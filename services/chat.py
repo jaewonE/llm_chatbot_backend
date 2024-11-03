@@ -5,7 +5,7 @@ from typing import Optional
 
 from schemas.chat import *
 from ai.llm import load_llm_model, generate_response
-from schemas.room import CreateRoomInput
+from schemas.room import CreateRoomInput, Room
 from model.chat import ChatTable
 from model.room import RoomTable
 from error.exceptions import ChatNotFoundError, UnauthorizedError

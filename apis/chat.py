@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from auth.auth_bearer import JWTBearer
 from services.chat import chat_service
 from schemas.chat import *
+from schemas.room import GetRoomChatsOutput
 from db import get_db_session
 from error.handler import handle_http_exceptions
 

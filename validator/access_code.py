@@ -1,4 +1,4 @@
-from core import env
+from core.env import env
 from error.exceptions import WrongAccessCodeException
 
 

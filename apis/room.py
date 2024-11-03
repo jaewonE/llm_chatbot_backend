@@ -25,6 +25,15 @@ def create_room_endpoint(
     return CreateRoomOutput(room=room, success=True, message="Room created successfully")
 
 
+@router.get("/myrooms", dependencies=[Depends(JWTBearer())], response_model=GetUserRoomsOutput)
+@handle_http_exceptions
+def get_user_rooms_endpoint(
+        db: Session = Depends(get_db_session),
+        user_id: str = Depends(JWTBearer())) -> GetUserRoomsOutput:
+    rooms = room_service.get_all_rooms_by_user(db, user_id)
+    return GetUserRoomsOutput(rooms=rooms, success=True, message="Rooms fetched successfully")
+
+
 @router.get("/{room_id}", dependencies=[Depends(JWTBearer())], response_model=GetRoomOutput)
 @handle_http_exceptions
 def get_room_endpoint(
@@ -33,15 +42,6 @@ def get_room_endpoint(
         user_id: str = Depends(JWTBearer())) -> GetRoomOutput:
     room = room_service.get_room_by_id(db, room_id, user_id)
     return GetRoomOutput(room=room, success=True, message="Room fetched successfully")
-
-
-@router.get("/myrooms", dependencies=[Depends(JWTBearer())], response_model=GetUserRoomsOutput)
-@handle_http_exceptions
-def get_user_rooms_endpoint(
-        db: Session = Depends(get_db_session),
-        user_id: str = Depends(JWTBearer())) -> GetUserRoomsOutput:
-    rooms = room_service.get_all_rooms_by_user(db, user_id)
-    return GetUserRoomsOutput(rooms=rooms, success=True, message="Rooms fetched successfully")
 
 
 @router.put("/{room_id}", dependencies=[Depends(JWTBearer())], response_model=UpdateRoomOutput)

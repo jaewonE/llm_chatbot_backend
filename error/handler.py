@@ -23,9 +23,6 @@ def handle_http_exceptions(func: Callable) -> Callable:
                 f"Calling async function: {func.__name__} with args: {args}, kwargs: {kwargs}"
             )
             result = await func(*args, **kwargs)
-            logger.info(
-                f"Async function {func.__name__} executed successfully"
-            )
             return result
 
         except (ValidationError, DuplicateEmailError) as ve:
@@ -34,7 +31,7 @@ def handle_http_exceptions(func: Callable) -> Callable:
                 status_code=HTTP_400_BAD_REQUEST, detail=str(ve)
             )
 
-        except (UnauthorizedError, WrongFileTypeError, WrongAccessCodeException) as ue:
+        except (UnauthorizedError, WrongFileTypeError, WrongAccessCodeException, UnAvailableModelError) as ue:
             logger.error(f"403 Forbidden: {str(ue)}", exc_info=True)
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN, detail=str(ue)
@@ -46,7 +43,7 @@ def handle_http_exceptions(func: Callable) -> Callable:
                 status_code=HTTP_404_NOT_FOUND, detail=str(not_found_err)
             )
 
-        except (ImageProcessingError, UnAvailableModelError) as server_err:
+        except (ImageProcessingError) as server_err:
             logger.error(
                 f"500 Internal Server Error: {str(server_err)}", exc_info=True)
             raise HTTPException(
@@ -67,7 +64,6 @@ def handle_http_exceptions(func: Callable) -> Callable:
             logger.info(
                 f"Calling sync function: {func.__name__} with args: {args}, kwargs: {kwargs}")
             result = func(*args, **kwargs)
-            logger.info(f"Sync function {func.__name__} executed successfully")
             return result
         except (ValidationError, DuplicateEmailError) as ve:
             logger.error(f"400 Bad Request: {str(ve)}", exc_info=True)
@@ -75,7 +71,7 @@ def handle_http_exceptions(func: Callable) -> Callable:
                 status_code=HTTP_400_BAD_REQUEST, detail=str(ve)
             )
 
-        except (UnauthorizedError, WrongFileTypeError, WrongAccessCodeException) as ue:
+        except (UnauthorizedError, WrongFileTypeError, WrongAccessCodeException, UnAvailableModelError) as ue:
             logger.error(f"403 Forbidden: {str(ue)}", exc_info=True)
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN, detail=str(ue)
@@ -87,7 +83,7 @@ def handle_http_exceptions(func: Callable) -> Callable:
                 status_code=HTTP_404_NOT_FOUND, detail=str(not_found_err)
             )
 
-        except (ImageProcessingError, UnAvailableModelError) as server_err:
+        except (ImageProcessingError) as server_err:
             logger.error(
                 f"500 Internal Server Error: {str(server_err)}", exc_info=True)
             raise HTTPException(

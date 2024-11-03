@@ -1,16 +1,15 @@
 # schemas/chat.py
 from pydantic import BaseModel, field_validator
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime
 
 from schemas.common import BaseOutput
-from schemas.room import Room
 from validator.chat import validate_model
 
 
 class Chat(BaseModel):
-    id: str
-    room_id: str
+    id: int
+    room_id: int
     ask: str
     answer: str
     model: str
@@ -24,7 +23,7 @@ class Chat(BaseModel):
 
 
 class CreateChatInput(BaseModel):
-    room_id: Optional[str] = None
+    room_id: Optional[int] = None
     model: Optional[str] = None
     ask: str
 
@@ -39,12 +38,8 @@ class GetChatOutput(BaseOutput):
     chat: Optional[Chat] = None
 
 
-class GetRoomChatsOutput(BaseOutput):
-    room: Optional[Room] = None
-
-
 class UpdateChatInput(BaseModel):
-    id: str
+    id: int
     model: str
     ask: str
 

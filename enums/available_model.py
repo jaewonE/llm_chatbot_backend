@@ -13,6 +13,7 @@ allowed_available_models = tuple(e.value for e in AvailableModel)
 
 
 def str_to_available_model(model: str) -> AvailableModel:
-    if model.capitalize() in allowed_available_models:
-        return AvailableModel[model.capitalize()]
+    capitalized_model = model.capitalize()
+    if capitalized_model in allowed_available_models:
+        return AvailableModel(capitalized_model)
     raise UnAvailableModelError(f"Model {model} is not available")
