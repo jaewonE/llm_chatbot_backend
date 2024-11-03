@@ -1,7 +1,6 @@
 # services/chat.py
 from sqlalchemy.orm import Session, joinedload
-from typing import List
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 from schemas.chat import *
@@ -9,7 +8,7 @@ from ai.llm import load_llm_model, generate_response
 from schemas.room import CreateRoomInput
 from model.chat import ChatTable
 from model.room import RoomTable
-from error.exceptions import *
+from error.exceptions import ChatNotFoundError, UnauthorizedError
 from utils.converters import chat_table_to_schema, room_table_to_schema
 from services.room import room_service
 from enums.available_model import AvailableModel, str_to_available_model

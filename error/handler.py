@@ -15,35 +15,52 @@ from log import logger
 
 
 def handle_http_exceptions(func: Callable) -> Callable:
-
     # 비동기 함수용 래퍼 함수
     @functools.wraps(func)
     async def async_wrapper(*args, **kwargs) -> Any:
         try:
             logger.info(
-                f"Calling async function: {func.__name__} with args: {args}, kwargs: {kwargs}")
+                f"Calling async function: {func.__name__} with args: {args}, kwargs: {kwargs}"
+            )
             result = await func(*args, **kwargs)
             logger.info(
-                f"Async function {func.__name__} executed successfully")
+                f"Async function {func.__name__} executed successfully"
+            )
             return result
-        except (ValidationError, DuplicateEmailError, WrongAccessCodeException) as ve:
+
+        except (ValidationError, DuplicateEmailError) as ve:
             logger.error(f"400 Bad Request: {str(ve)}", exc_info=True)
             raise HTTPException(
-                status_code=HTTP_400_BAD_REQUEST, detail=str(ve))
-        except (UnauthorizedError, WrongFileTypeError) as ue:
+                status_code=HTTP_400_BAD_REQUEST, detail=str(ve)
+            )
+
+        except (UnauthorizedError, WrongFileTypeError, WrongAccessCodeException) as ue:
             logger.error(f"403 Forbidden: {str(ue)}", exc_info=True)
-            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=str(ue))
-        except (UserNotFoundError) as pnfe:
-            logger.error(f"404 Not Found: {str(pnfe)}", exc_info=True)
             raise HTTPException(
-                status_code=HTTP_404_NOT_FOUND, detail=str(pnfe))
+                status_code=HTTP_403_FORBIDDEN, detail=str(ue)
+            )
+
+        except (UserNotFoundError, RoomNotFoundError, ChatNotFoundError) as not_found_err:
+            logger.error(f"404 Not Found: {str(not_found_err)}", exc_info=True)
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND, detail=str(not_found_err)
+            )
+
+        except (ImageProcessingError, UnAvailableModelError) as server_err:
+            logger.error(
+                f"500 Internal Server Error: {str(server_err)}", exc_info=True)
+            raise HTTPException(
+                status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
+            )
+
         except Exception as e:
-            logger.error(f"500 Internal Server Error: {e}", exc_info=True)
+            logger.error(f"500 Internal Server Error: {str(e)}", exc_info=True)
             raise HTTPException(
                 status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
             )
 
     # 동기 함수용 래퍼 함수
+
     @functools.wraps(func)
     def sync_wrapper(*args, **kwargs) -> Any:
         try:
@@ -52,19 +69,33 @@ def handle_http_exceptions(func: Callable) -> Callable:
             result = func(*args, **kwargs)
             logger.info(f"Sync function {func.__name__} executed successfully")
             return result
-        except (ValidationError, DuplicateEmailError, WrongAccessCodeException) as ve:
+        except (ValidationError, DuplicateEmailError) as ve:
             logger.error(f"400 Bad Request: {str(ve)}", exc_info=True)
             raise HTTPException(
-                status_code=HTTP_400_BAD_REQUEST, detail=str(ve))
-        except (UnauthorizedError, WrongFileTypeError) as ue:
+                status_code=HTTP_400_BAD_REQUEST, detail=str(ve)
+            )
+
+        except (UnauthorizedError, WrongFileTypeError, WrongAccessCodeException) as ue:
             logger.error(f"403 Forbidden: {str(ue)}", exc_info=True)
-            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=str(ue))
-        except (UserNotFoundError) as pnfe:
-            logger.error(f"404 Not Found: {str(pnfe)}", exc_info=True)
             raise HTTPException(
-                status_code=HTTP_404_NOT_FOUND, detail=str(pnfe))
+                status_code=HTTP_403_FORBIDDEN, detail=str(ue)
+            )
+
+        except (UserNotFoundError, RoomNotFoundError, ChatNotFoundError) as not_found_err:
+            logger.error(f"404 Not Found: {str(not_found_err)}", exc_info=True)
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND, detail=str(not_found_err)
+            )
+
+        except (ImageProcessingError, UnAvailableModelError) as server_err:
+            logger.error(
+                f"500 Internal Server Error: {str(server_err)}", exc_info=True)
+            raise HTTPException(
+                status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
+            )
+
         except Exception as e:
-            logger.error(f"500 Internal Server Error: {e}", exc_info=True)
+            logger.error(f"500 Internal Server Error: {str(e)}", exc_info=True)
             raise HTTPException(
                 status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
             )

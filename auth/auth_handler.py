@@ -1,7 +1,6 @@
 import time
 import jwt
 from typing import Dict
-from decouple import config
 
 from core.env import env
 

@@ -1,13 +1,11 @@
 # apis/chat.py
-from fastapi import APIRouter, Depends, Query, UploadFile, File
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 from auth.auth_bearer import JWTBearer
 from services.chat import chat_service
 from schemas.chat import *
 from db import get_db_session
-from error.exceptions import *
 from error.handler import handle_http_exceptions
 
 router = APIRouter(

@@ -1,14 +1,13 @@
 from sqlalchemy.orm import Session
 from typing import Optional
 from fastapi import UploadFile
-from PIL import Image
 import os
 
 from schemas.user import *
 from model.user import UserTable
 from auth.auth_bcrypt import AuthBcrypt
-from error.exceptions import (UserNotFoundError, UnauthorizedError,
-                              DuplicateEmailError, WrongFileTypeError, ImageProcessingError)
+from error.exceptions import (
+    UserNotFoundError, UnauthorizedError, DuplicateEmailError)
 from utils.converters import user_table_to_schema
 from constants.path import PROFILE_PHOTO_DIR
 from utils.os_utils import save_image

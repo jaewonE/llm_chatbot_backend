@@ -6,7 +6,6 @@ from auth.auth_handler import signJWT
 from services.user import user_service
 from schemas.user import *
 from db import get_db_session
-from error.exceptions import *
 from error.handler import handle_http_exceptions
 from validator.access_code import check_access_code
 
