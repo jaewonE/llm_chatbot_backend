@@ -7,6 +7,7 @@ from error.exceptions import UnAvailableModelError
 class AvailableModel(str, Enum):
     """Available models"""
     MOCK = 'Mock'
+    MentalLlm = 'MentalLlm'
 
 
 allowed_available_models = tuple(e.value for e in AvailableModel)

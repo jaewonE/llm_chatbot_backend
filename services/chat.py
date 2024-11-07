@@ -12,6 +12,7 @@ from error.exceptions import ChatNotFoundError, UnauthorizedError
 from utils.converters import chat_table_to_schema, room_table_to_schema
 from services.room import room_service
 from enums.available_model import AvailableModel, str_to_available_model
+from ai.rag import rag_service
 
 
 class ChatService:
@@ -31,13 +32,20 @@ class ChatService:
                 raise UnauthorizedError(
                     "You are not authorized to create a chat for this room")
 
+        print("ASK:", create_chat_input.ask)
+        rag_responses = rag_service.search_in_rag(create_chat_input.ask)
+        print("RAG RESPONSES:", rag_responses)
+        rag_prompt = create_chat_input.ask
+        for i in range(len(rag_responses)):
+            rag_prompt += f"{i+1}. {rag_responses[i]}\n"
+
         if create_chat_input.model == None:
             create_chat_input.model = AvailableModel.MOCK.value
         use_model = str_to_available_model(create_chat_input.model)
 
         # LLM 모델 로드 및 응답 생성
-        load_llm_model(use_model)
-        response = generate_response(use_model, create_chat_input.ask)
+        load_llm_model(use_model)  # 이미 모델이 로드 되어있으면 로드하지 않음.
+        response = generate_response(use_model, rag_prompt)
 
         create_chat_data = create_chat_input.model_dump()
         create_chat_data['answer'] = response

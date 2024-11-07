@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Type, Dict, Any
 
 from enums.available_model import AvailableModel
-from ai.llm.models import MockModel
+from ai.llm.models import MockModel, MentalLlm
 
 
 @dataclass
@@ -15,6 +15,10 @@ model_dict = {
     AvailableModel.MOCK.value: ModelConfig(
         model_cls=MockModel,
         args={'model_name': "Mock", 'delay': 3, 'init_delay': 3}
+    ),
+    AvailableModel.MentalLlm.value: ModelConfig(
+        model_cls=MentalLlm,
+        args={'model_name': "MentalLlm"}
     ),
     # AvailableModel.GEMMA.value: ModelConfig(
     #     model_cls=GemmaModel,
