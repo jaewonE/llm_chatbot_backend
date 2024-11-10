@@ -1,6 +1,6 @@
 # ai/llm/__init__.py
 from ai.llm.manager import AiModelManager
-from enums.available_model import AvailableModel
+from ai.llm.config import AvailableModel
 
 # ModelManager의 인스턴스를 생성합니다.
 _ai_model_manager = AiModelManager()

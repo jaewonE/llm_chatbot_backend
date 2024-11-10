@@ -1,5 +1,5 @@
 # validators/chat.py
-from enums.available_model import allowed_available_models
+from ai.llm.config import allowed_available_models
 from error.exceptions import UnAvailableModelError
 
 

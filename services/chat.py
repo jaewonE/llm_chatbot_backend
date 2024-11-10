@@ -11,7 +11,7 @@ from model.room import RoomTable
 from error.exceptions import ChatNotFoundError, UnauthorizedError
 from utils.converters import chat_table_to_schema, room_table_to_schema
 from services.room import room_service
-from enums.available_model import AvailableModel, str_to_available_model
+from ai.llm.config import AvailableModel, str_to_available_model
 from ai.rag import rag_service
 
 

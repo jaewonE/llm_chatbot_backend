@@ -1,8 +1,7 @@
 import threading
 from typing import Dict, Any
 
-from enums.available_model import AvailableModel, allowed_available_models
-from ai.llm.config import model_dict, ModelConfig
+from ai.llm.config import model_dict, ModelConfig, AvailableModel, allowed_available_models
 from ai.llm.scheduler import ModelScheduler
 from log import logger
 
@@ -26,7 +25,7 @@ class AiModelManager:
         ]
         if missing_models:
             error_msg = (
-                f"Model enums (from enums/available_model.py) {missing_models} "
+                f"Model enums (from ai.llm.config/available_model.py) {missing_models} "
                 f"not found in model_dict (from ai/llm/config.py).\n"
                 f"Models in enums: {allowed_available_models}\n"
                 f"Models in model_dict: {list(model_dict.keys())}"

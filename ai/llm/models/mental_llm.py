@@ -7,14 +7,17 @@ from log import logger
 
 
 class MentalLlm(BaseAiModel):
-    def __init__(self, max_length=512, model_name="MentalLlm"):
+    def __init__(self, max_length=512, model_name="MentalLlm", **kwags):
+        print("MentalLlm kwags: ", kwags)
         self.max_length = max_length
         self.user_name = "사용자"
+        self.device = kwags['device'] if kwags['device'] != None else 'cpu'
+        print(f"self.device: {self.device}")
 
         # 모델과 토크나이저 로드
         load_model_name = "juhoon01/ko_llama3_model_shinhan_2"
         self.model = AutoModelForCausalLM.from_pretrained(
-            load_model_name, torch_dtype=torch.float32, device_map="None")
+            load_model_name, torch_dtype=torch.float32, device_map=self.device)
         self.tokenizer = AutoTokenizer.from_pretrained(load_model_name)
 
         logger.info(f"Load {model_name} model complete.")

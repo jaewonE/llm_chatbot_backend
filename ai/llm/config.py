@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import Type, Dict, Any
+from enum import Enum
 
-from enums.available_model import AvailableModel
+from error.exceptions import UnAvailableModelError
 from ai.llm.models import MockModel, MentalLlm
 
 
@@ -9,6 +10,11 @@ from ai.llm.models import MockModel, MentalLlm
 class ModelConfig:
     model_cls: Type
     args: Dict[str, Any]
+
+class AvailableModel(str, Enum):
+    """Available models"""
+    MOCK = 'Mock'
+    MentalLlm = 'MentalLlm'
 
 
 model_dict = {
@@ -18,7 +24,7 @@ model_dict = {
     ),
     AvailableModel.MentalLlm.value: ModelConfig(
         model_cls=MentalLlm,
-        args={'model_name': "MentalLlm"}
+        args={'model_name': "MentalLlm", 'device': 'cuda'}
     ),
     # AvailableModel.GEMMA.value: ModelConfig(
     #     model_cls=GemmaModel,
@@ -29,3 +35,12 @@ model_dict = {
     #     args={'model_name': 'LLama2', 'max_length': 512, 'device': 'cuda'}
     # ),
 }
+
+
+allowed_available_models = tuple(e.value for e in AvailableModel)
+
+
+def str_to_available_model(model: str) -> AvailableModel:
+    if model in allowed_available_models:
+        return AvailableModel(model)
+    raise UnAvailableModelError(f"Model {model} is not available")
